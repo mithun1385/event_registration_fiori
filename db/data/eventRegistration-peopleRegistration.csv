@@ -1,0 +1,8 @@
+ID,eventName,location,date,availableSeats
+550e8400-e29b-41d4-a716-446655440001,Tech Conference,Bangalore,2026-04-10,120
+550e8400-e29b-41d4-a716-446655440002,Startup Meetup,Hyderabad,2026-04-12,80
+550e8400-e29b-41d4-a716-446655440003,AI Workshop,Chennai,2026-04-15,60
+550e8400-e29b-41d4-a716-446655440004,Cloud Summit,Mumbai,2026-04-18,150
+550e8400-e29b-41d4-a716-446655440005,Developer Bootcamp,Pune,2026-04-20,90
+550e8400-e29b-41d4-a716-446655440006,Data Science Seminar,Delhi,2026-04-22,70
+550e8400-e29b-41d4-a716-446655440007,Open Source Meetup,Kolkata,2026-04-25,110

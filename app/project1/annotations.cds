@@ -1,0 +1,1 @@
+using eventRegistrationHandler as service from '../../srv/cat-service';

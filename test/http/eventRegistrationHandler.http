@@ -1,0 +1,7 @@
+###
+GET http://localhost:4004/odata/v4/event-registration-handler/participants
+
+
+###
+GET http://localhost:4004/odata/v4/event-registration-handler/peopleRegistrations?$expand=registed
+

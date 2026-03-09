@@ -1,0 +1,7 @@
+{
+  "xsappname": "event_registration_fiori",
+  "tenant-mode": "dedicated",
+  "description": "Security profile of called application",
+  "scopes": [],
+  "role-templates": []
+}
