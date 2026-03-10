@@ -359,16 +359,11 @@
                                 <Button
                                     id="_IDGenButton"
                                     type="Default"
-                                    text="*"
+                                    text=""
                                     press="onPress"
                                     ariaDescribedBy="acceptButtonDescription genericButtonDescription"
                                 >
-                                    <layoutData>
-                                        <FlexItemData
-                                            id="_IDGenFlexItemData"
-                                            growFactor="1"
-                                        />
-                                    </layoutData>
+                                
                                 </Button>
                             </Column>
                         </columns>

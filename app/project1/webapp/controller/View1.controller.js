@@ -1,7 +1,8 @@
 
 sap.ui.define([
-    "sap/ui/core/mvc/Controller"
-], (Controller) => {
+    "sap/ui/core/mvc/Controller",
+    "sap/m/MessageBox"
+], function (Controller,MessageBox)  {
     "use strict";
 
     return Controller.extend("project1.controller.View1", {
@@ -17,6 +18,7 @@ sap.ui.define([
             this.hiddleAllpanels();
             var oPanel = this.byId("_IDGenHBox2");
             oPanel.setVisible(true);
+           
 
             var oButton = oEvent.getSource();
 
@@ -50,10 +52,7 @@ sap.ui.define([
             this.byId("Panel3").setVisible(false);
 
         },
-
-
         onSubmit: function () {
-
             var participantsName = this.byId("participantsName").getValue();
             var email = this.byId("email").getValue();
             var phone = this.byId("phone").getValue();
@@ -68,6 +67,15 @@ sap.ui.define([
             });
 
             console.log(oEventContext);
+            
+            oEventContext.created().then(()=>{
+                MessageBox.success("Details are to be added ")
+            }).catch((err)=>{
+                 console.error(err);
+                MessageBox.error("Error details are not entered");
+                console.error("Error details not to be entered :" +err);
+                
+            });
 
         }
     });

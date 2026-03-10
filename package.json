@@ -25,7 +25,7 @@
     "db": {
       "kind": "sqlite", 
       "credentials": {
-        "url": "db/my-bookshop.sqlite"
+        "url": "db/db.sqlite"
       }
     }
   }
