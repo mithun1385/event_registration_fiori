@@ -36,6 +36,7 @@
                 width="60px"
                 height="30px"
             >
+
                 <layoutData>
                     <OverflowToolbarLayoutData
                         id="_IDGenOverflowToolbarLayoutData1"
@@ -287,6 +288,7 @@
                                 text="External Link"
                                 icon="sap-icon://attachment"
                             />
+
                             <tnt:NavigationListItem
                                 id="_IDGenNavigationListItem16"
                                 selectable="false"

@@ -57,6 +57,7 @@ sap.ui.define([
             var email = this.byId("email").getValue();
             var phone = this.byId("phone").getValue();
 
+
             var oModel = this.getView().getModel();
 
             var oEventContext = oModel.bindList("/participants").create({
@@ -69,7 +70,18 @@ sap.ui.define([
             console.log(oEventContext);
             
             oEventContext.created().then(()=>{
-                MessageBox.success("Details are to be added ")
+                MessageBox.success("Details are to be added ");
+             participantsName = this.byId("participantsName").setValue(null);
+            email = this.byId("email").setValue(null);
+            phone = this.byId("phone").setValue(null);
+
+               if (!regx.test(email)) {
+
+        sap.m.MessageBox.error("Invalid Email");
+
+        return; // stop execution
+               }
+
             }).catch((err)=>{
                  console.error(err);
                 MessageBox.error("Error details are not entered");
