@@ -15,6 +15,8 @@ modules:
       instances: 1
     build-parameters:
       builder: npm-ci
+    requires:
+      - name: event_registration_fiori-db
   - name: event_registration_fiori-app-content
     type: com.sap.application.content
     path: .
@@ -40,6 +42,14 @@ modules:
         - npm run build:cf
       supported-platforms:
         []
+
+  - name: event_registration_fiori-db-deployer
+    type: hdb
+    path: gen/db
+    parameters:
+      buildpack: nodejs_buildpack
+    requires:
+      - name: event_registration_fiori-db
 resources:
   - name: event_registration_fiori-repo-host
     type: org.cloudfoundry.managed-service
@@ -65,6 +75,11 @@ resources:
       service: destination
       service-name: event_registration_fiori-destination-service
       service-plan: lite
+  - name: event_registration_fiori-db
+    type: com.sap.xs.hdi-container
+    parameters:
+      service: hana
+      service-plan: hdi-shared
 parameters:
   deploy_mode: html5-repo
   enable-parallel-deployments: true
