@@ -8,7 +8,10 @@ module.exports = class eventRegistrationHandler extends cds.ApplicationService{
 
 
         this.on('CREATE','participants',async(req,next)=>{
+
             const email = req.data.email
+            console.log(email);
+            
             const regx= /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
           if(!regx.test(email)){

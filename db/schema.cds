@@ -14,5 +14,5 @@ entity participants : cuid {
   peopleRegistration:Association to peopleRegistration;
   participantsName:String(260);
   email:String;
-  phone:String(10);
+  phone:String(15);
 }

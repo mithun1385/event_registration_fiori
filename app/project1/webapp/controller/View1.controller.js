@@ -42,7 +42,7 @@ sap.ui.define([
         EnterDetails() {
             this.hiddleAllpanels();
             var oPanel = this.byId("Panel4")
-            oPanel.setVisible(true);
+            oPanel.setVisible(true);   
         },
         hiddleAllpanels() {
             this.byId("_IDGenHBox2").setVisible(false)
@@ -56,13 +56,19 @@ sap.ui.define([
             var phone = this.byId("phone").getValue();
             var oModel = this.getView().getModel();
 
+            var valid = /^[\+]?[0-9]{0,3}\W?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
+            if(!valid.test(phone)){
+                sap.m.MessageBox.error("phone number is not valid ")
+                return ;
+            }
+
 
             if (participantsName=="" ||email==""|| phone =="" ) {
                 sap.m.MessageBox.error("Please fill all fields");
                 return
 
             }
-            var regx = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            var regx = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; 
             if (!regx.test(email)) {
 
                 sap.m.MessageBox.error("Invalid Email");
