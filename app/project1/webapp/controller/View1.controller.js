@@ -1,8 +1,11 @@
 
+
+
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
-    "sap/m/MessageBox"
-], function (Controller, MessageBox) {
+    "sap/m/MessageBox",
+    "sap/ui/core/Fragment"
+], function (Controller, MessageBox, Fragment) {
     "use strict";
 
     return Controller.extend("project1.controller.View1", {
@@ -19,13 +22,8 @@ sap.ui.define([
             var oPanel = this.byId("_IDGenHBox2");
             oPanel.setVisible(true);
             var oButton = oEvent.getSource();
-
-
             var oContext = oButton.getBindingContext();
-
-
             var odata = oContext.getObject();
-
             console.log(odata);
             this.selectedEventID = odata.ID;
         },
@@ -42,7 +40,7 @@ sap.ui.define([
         EnterDetails() {
             this.hiddleAllpanels();
             var oPanel = this.byId("Panel4")
-            oPanel.setVisible(true);   
+            oPanel.setVisible(true);
         },
         hiddleAllpanels() {
             this.byId("_IDGenHBox2").setVisible(false)
@@ -57,26 +55,19 @@ sap.ui.define([
             var oModel = this.getView().getModel();
 
             var valid = /^[\+]?[0-9]{0,3}\W?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
-            if(!valid.test(phone)){
+            if (!valid.test(phone)) {
                 sap.m.MessageBox.error("phone number is not valid ")
-                return ;
+                return;
             }
-
-
-            if (participantsName=="" ||email==""|| phone =="" ) {
+            if (participantsName == "" || email == "" || phone == "") {
                 sap.m.MessageBox.error("Please fill all fields");
                 return
-
             }
-            var regx = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; 
+            var regx = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
             if (!regx.test(email)) {
-
                 sap.m.MessageBox.error("Invalid Email");
-
                 return; // stop execution
             }
-
-
             var participantsName = this.byId("participantsName").getValue();
 
             var oEventContext = oModel.bindList("/participants").create({
@@ -99,6 +90,44 @@ sap.ui.define([
                 console.error("Error details not to be entered :" + err);
 
             });
+        },
+        onActionPressed: function (oEvent) {
+            var oButton = oEvent.getSource();
+            var oContext = oButton.getBindingContext();
+            this._oSelectedContext = oContext;
+
+            if (!this._oActionSheet) {
+                Fragment.load({
+                    id: this.getView().getId(),
+                    name: "project1.view.ActionSheet",
+                    controller: this
+                }).then(function (oActionSheet) {
+                    this._oActionSheet = oActionSheet;
+                    this.getView().addDependent(this._oActionSheet);
+                    this._oActionSheet.openBy(oButton);
+                }.bind(this));
+            } else {
+                this._oActionSheet.openBy(oButton);
+            }
+        },
+        onDeletePress: function () {
+
+            var oContext = this._oSelectedContext;
+            var oDelete = oContext.getProperty("ID");
+
+            MessageBox.confirm("Are sure you want to delete this registration :" + oDelete + "?", {
+                actions: [MessageBox.Action.YES, MessageBox.Action.NO],
+
+                onClose: function (oAction) {
+                    if (oAction === MessageBox.Action.YES) {
+                        oContext.delete("$direct").then(function () {
+                            MessageBox.success("Registration ID :" + oDelete + "deleted successfully")
+                        }).catch(function (oError) {
+                            MessageBox.error("Error deleting Registration ID " + oDelete + "." + oError + "Please try later")
+                        })
+                    }
+                }
+            })
         }
     });
 });

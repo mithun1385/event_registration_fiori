@@ -356,6 +356,7 @@
                                     text="Available Seats"
                                 />
                             </Column>
+                            
 
                             <Column id="_IDGenColumn6">
                                 <Button
@@ -471,6 +472,12 @@
                                     text="phone"
                                 />
                             </Column>
+                            <Column id="_IDGenColumn14">
+                                <Text
+                                    id="_IDGenText10"
+                                    text="Action"
+                                />
+                            </Column>
                         </columns>
 
                         <items>
@@ -505,6 +512,7 @@
                                         id="_IDGenText26"
                                         text="{registed/0/phone}"
                                     />
+                                    <Button id="_IDGenButton4" text="..." press="onActionPressed($event)"/>
                                 </cells>
                             </ColumnListItem>
                         </items>

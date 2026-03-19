@@ -19,8 +19,6 @@ module.exports = class eventRegistrationHandler extends cds.ApplicationService{
           }
           return next();
         })
- 
-
         return super.init()
     }
 }
