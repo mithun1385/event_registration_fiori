@@ -128,6 +128,32 @@ sap.ui.define([
                     }
                 }
             })
+        },
+        onRegister: function (oEvent) {
+
+            var oContext = oEvent.getSource().getBindingContext();
+            var eventID = oContext.getProperty("ID");
+
+            var oModel = this.getView().getModel();
+
+            var oPayload = {
+                peopleRegistration_ID: eventID,
+                participantsName: "Mithun",
+                email: "test@gmail.com",
+                phone: "9999999999"
+            };
+
+            oModel.create("/participants", oPayload, {
+                success: function () {
+                    sap.m.MessageToast.show("Registered successfully");
+
+                    // Refresh table → seats updated
+                    oModel.refresh();
+                },
+                error: function (err) {
+                    sap.m.MessageBox.error("Failed: " + err.message);
+                }
+            });
         }
     });
 });

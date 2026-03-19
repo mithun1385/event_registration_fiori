@@ -3,7 +3,7 @@ using { cuid } from '@sap/cds/common';
 namespace eventRegistration;
 
 entity peopleRegistration : cuid {
-  eventName:String(260);
+  eventName:String(260); 
   location:String(100);
   date:Date;
   availableSeats:Integer;

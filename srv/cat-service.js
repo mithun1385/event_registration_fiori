@@ -1,24 +1,27 @@
-const cds = require('@sap/cds');
+module.exports = (srv) => {
 
-module.exports = class eventRegistrationHandler extends cds.ApplicationService{
+  const { peopleRegistrations } = srv.entities;
 
-    init(){
+  srv.before('CREATE', 'participants', async (req) => {
 
-        const { peopleRegistrations,participants} = this.entities
+    const eventID = req.data.peopleRegistration_ID;
 
+    const event = await SELECT.one
+      .from(peopleRegistrations)
+      .where({ ID: eventID });
 
-        this.on('CREATE','participants',async(req,next)=>{
-
-            const email = req.data.email
-            console.log(email);
-            
-            const regx= /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-          if(!regx.test(email)){
-            return req.error(400,"Invaid email ")
-          }
-          return next();
-        })
-        return super.init()
+    if (!event) {
+      return req.error(404, "Event not found");
     }
-}
+
+    if (event.availableSeats <= 0) {
+      return req.error(400, "No seats available");
+    }
+
+    await UPDATE(peopleRegistrations)
+      .set({ availableSeats: event.availableSeats - 1 })
+      .where({ ID: eventID });
+
+  });
+
+};
