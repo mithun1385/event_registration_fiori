@@ -1,49 +1,55 @@
-module.exports = (srv) => {
+const cds = require('@sap/cds');
 
-  const { peopleRegistrations } = srv.entities;
+module.exports = class ParticipantService extends cds.ApplicationService {
 
-  srv.before('CREATE', 'participants', async (req) => {
+  async init() {
 
-    const eventID = req.data.peopleRegistration_ID;
+    const { peopleRegistrations } = this.entities;
 
-    const event = await SELECT.one
-      .from(peopleRegistrations)
-      .where({ ID: eventID });
+    // 🔹 Seat Validation + Update
+    this.before('CREATE', 'participants', async (req) => {
 
-    if (!event) {
-      return req.error(404, "Event not found");
-    }
+      const eventID = req.data.peopleRegistration_ID;
 
-    if (event.availableSeats <= 0) {
-      return req.error(400, "No seats available");
-    }
+      const event = await SELECT.one
+        .from(peopleRegistrations)
+        .where({ ID: eventID });
 
-    await UPDATE(peopleRegistrations)
-      .set({ availableSeats: event.availableSeats - 1 })
-      .where({ ID: eventID });
+      if (!event) {
+        return req.error(404, "Event not found");
+      }
 
-  });
-  
-srv.before('CREATE', 'participants', async (req) => {
+      if (event.availableSeats <= 0) {
+        return req.error(400, "No seats available");
+      }
 
-  const { participantsName, email, phone } = req.data;
+      await UPDATE(peopleRegistrations)
+        .set({ availableSeats: event.availableSeats - 1 })
+        .where({ ID: eventID });
 
+    });
 
-  if (!participantsName || participantsName.trim() === "") {
-    req.error(400, "Participant name is required");
+    // 🔹 Field Validation
+    this.before('CREATE', 'participants', async (req) => {
+
+      const { participantsName, email, phone } = req.data;
+
+      if (!participantsName || participantsName.trim() === "") {
+        req.error(400, "Participant name is required");
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!email || !emailRegex.test(email)) {
+        req.error(400, "Invalid email format");
+      }
+
+      const phoneRegex = /^[0-9]{10}$/;
+      if (!phone || !phoneRegex.test(phone)) {
+        req.error(400, "Invalid phone number (must be 10 digits)");
+      }
+
+    });
+
+    return super.init();
   }
-
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!email || !emailRegex.test(email)) {
-    req.error(400, "Invalid email format");
-  }
-
-
-  const phoneRegex = /^[0-9]{10}$/;
-  if (!phone || !phoneRegex.test(phone)) {
-    req.error(400, "Invalid phone number (must be 10 digits)");
-  }
-
-});
 };
