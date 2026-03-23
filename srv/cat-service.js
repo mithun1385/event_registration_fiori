@@ -23,5 +23,27 @@ module.exports = (srv) => {
       .where({ ID: eventID });
 
   });
+  
+srv.before('CREATE', 'participants', async (req) => {
 
+  const { participantsName, email, phone } = req.data;
+
+
+  if (!participantsName || participantsName.trim() === "") {
+    req.error(400, "Participant name is required");
+  }
+
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!email || !emailRegex.test(email)) {
+    req.error(400, "Invalid email format");
+  }
+
+
+  const phoneRegex = /^[0-9]{10}$/;
+  if (!phone || !phoneRegex.test(phone)) {
+    req.error(400, "Invalid phone number (must be 10 digits)");
+  }
+
+});
 };

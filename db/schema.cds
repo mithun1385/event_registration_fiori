@@ -10,9 +10,11 @@ entity peopleRegistration : cuid {
   registed:Association to many participants
                on registed.peopleRegistration = $self;
   }
+  
 entity participants : cuid {
   peopleRegistration:Association to peopleRegistration;
   participantsName:String(260);
   email:String;
   phone:String(15);
 }
+
