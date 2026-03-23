@@ -6,7 +6,7 @@ module.exports = class ParticipantService extends cds.ApplicationService {
 
     const { peopleRegistrations } = this.entities;
 
-    // 🔹 Seat Validation + Update
+
     this.before('CREATE', 'participants', async (req) => {
 
       const eventID = req.data.peopleRegistration_ID;
@@ -29,7 +29,7 @@ module.exports = class ParticipantService extends cds.ApplicationService {
 
     });
 
-    // 🔹 Field Validation
+
     this.before('CREATE', 'participants', async (req) => {
 
       const { participantsName, email, phone } = req.data;
