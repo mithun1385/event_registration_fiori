@@ -1,15 +1,14 @@
 const cds = require('@sap/cds');
 
 module.exports = class ParticipantService extends cds.ApplicationService {
-
   async init() {
 
-    const { peopleRegistrations } = this.entities;
+    const { peopleRegistrations, participants } = this.entities;
 
-    this.before('CREATE', 'participants', async (req) => {
+    // ✅ FIXED HERE
+    this.before('CREATE', participants, async (req) => {
 
       const { participantsName, email, phone, peopleRegistration_ID } = req.data;
-
 
       if (!participantsName || participantsName.trim() === "") {
         return req.error(400, "Participant name is required");
@@ -25,7 +24,6 @@ module.exports = class ParticipantService extends cds.ApplicationService {
         return req.error(400, "Invalid phone number (must be 10 digits)");
       }
 
-  
       const event = await SELECT.one
         .from(peopleRegistrations)
         .where({ ID: peopleRegistration_ID });
@@ -38,11 +36,34 @@ module.exports = class ParticipantService extends cds.ApplicationService {
         return req.error(400, "No seats available");
       }
 
-
       await UPDATE(peopleRegistrations)
         .set({ availableSeats: event.availableSeats - 1 })
         .where({ ID: peopleRegistration_ID });
 
+    });
+
+
+    // ✅ Your UPDATE logic (already correct)
+    this.before('UPDATE', participants, async (req) => {
+
+      const data = req.data;
+
+      if (
+        data.participantsName === "" &&
+        data.email === "" &&
+        data.phone === ""
+      ) {
+
+        const existing = await SELECT.one.from(participants).where({ ID: data.ID });
+
+        if (!existing) return;
+
+        const eventID = existing.peopleRegistration_ID;
+
+        await UPDATE(peopleRegistrations)
+          .set({ availableSeats: { '+=': 1 } })
+          .where({ ID: eventID });
+      }
     });
 
     return super.init();

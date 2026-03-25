@@ -1,6 +1,3 @@
-
-
-
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/m/MessageBox",
@@ -113,27 +110,36 @@ sap.ui.define([
         onDeletePress: function () {
 
             var oContext = this._oSelectedContext;
-            var oDelete = oContext.getProperty("ID");
 
-            MessageBox.confirm("Are sure you want to delete this registration :" + oDelete + "?", {
-                actions: [MessageBox.Action.YES, MessageBox.Action.NO],
+            var sName = oContext.getProperty("registed/0/participantsName");
 
-                onClose: function (oAction) {
-                    if (oAction === MessageBox.Action.YES) {
-                        oContext.delete("$direct").then(function () {
-                            MessageBox.success("Registration ID :" + oDelete + "deleted successfully")
-                        }).catch(function (oError) {
-                            MessageBox.error("Error deleting Registration ID " + oDelete + "." + oError + "Please try later")
-                        })
+            MessageBox.confirm(
+                "Clear registration for: " + sName + " ?",
+                {
+                    actions: [MessageBox.Action.YES, MessageBox.Action.NO],
+
+                    onClose: function (oAction) {
+                        if (oAction === MessageBox.Action.YES) {
+
+                            oContext.setProperty("registed/0/participantsName", "");
+                            oContext.setProperty("registed/0/email", "");
+                            oContext.setProperty("registed/0/phone", "");
+                            oContext.getModel().submitBatch("$auto")
+                                .then(function () {
+                                    MessageBox.success("Registration cleared successfully");
+                                })
+                                .catch(function (oError) {
+                                    MessageBox.error("Error updating data");
+                                });
+                        }
                     }
                 }
-            })
+            );
         },
         onRegister: function (oEvent) {
 
             var oContext = oEvent.getSource().getBindingContext();
             var eventID = oContext.getProperty("ID");
-
             var oModel = this.getView().getModel();
 
             var oPayload = {
@@ -146,8 +152,6 @@ sap.ui.define([
             oModel.create("/participants", oPayload, {
                 success: function () {
                     sap.m.MessageToast.show("Registered successfully");
-
-                    // Refresh table → seats updated
                     oModel.refresh();
                 },
                 error: function (err) {
